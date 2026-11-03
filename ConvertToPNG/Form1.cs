@@ -8,7 +8,7 @@ namespace ConvertToPNG
     {
         public Form1()
         {
-            InitializeComponent(GetOpenFileDialog11());
+            InitializeComponent();
         }
 
         private void btnAbrir_Click(object sender, EventArgs e)

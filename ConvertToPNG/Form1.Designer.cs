@@ -6,7 +6,6 @@
         ///  Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-        public System.ComponentModel.CancelEventHandler openFileDialog1_FileOk = null;
 
         /// <summary>
         ///  Clean up any resources being used.
@@ -21,31 +20,18 @@
             base.Dispose(disposing);
         }
 
-        private OpenFileDialog GetOpenFileDialog11()
-        {
-            return openFileDialog1;
-        }
-
-
         #region Windows Form Designer generated code
 
         /// <summary>
         ///  Required method for Designer support - do not modify
         ///  the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent(OpenFileDialog openFileDialog1)
+        private void InitializeComponent()
         {
-            this.openFileDialog1 = new OpenFileDialog();
             txtContenido = new TextBox();
             btnAbrir = new Button();
             btnGuardar = new Button();
-            
             SuspendLayout();
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            openFileDialog1.FileOk += openFileDialog1_FileOk;
             // 
             // txtContenido
             // 
@@ -92,7 +78,6 @@
 
         #endregion
 
-        private OpenFileDialog openFileDialog1;
         private TextBox txtContenido;
         private Button btnAbrir;
         private Button btnGuardar;

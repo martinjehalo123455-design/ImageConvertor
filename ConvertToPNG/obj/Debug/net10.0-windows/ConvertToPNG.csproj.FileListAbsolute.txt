@@ -67,3 +67,4 @@ C:\Users\usuario\source\repos\ConvertToJPG\ConvertToPNG\bin\Debug\net10.0-window
 C:\Users\usuario\source\repos\ConvertToJPG\ConvertToPNG\obj\Debug\net10.0-windows\ConvertT.4715786C.Up2Date
 C:\Users\usuario\source\repos\ConvertToJPG\ConvertToPNG\obj\Debug\net10.0-windows\ConvertToPNG.genruntimeconfig.cache
 C:\Users\usuario\source\repos\ConvertToJPG\ConvertToPNG\obj\Debug\net10.0-windows\ref\ConvertToPNG.dll
+C:\Users\usuario\source\repos\ConvertToJPG\ConvertToPNG\obj\Debug\net10.0-windows\ConvertToPNG.sourcelink.json
