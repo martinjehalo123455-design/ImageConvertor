@@ -30,7 +30,7 @@
         {
             txtContenido = new TextBox();
             btnAbrir = new Button();
-            btnGuardar = new Button();
+            btnConvertir = new Button();
             SuspendLayout();
             // 
             // txtContenido
@@ -52,22 +52,22 @@
             btnAbrir.UseVisualStyleBackColor = true;
             btnAbrir.Click += btnAbrir_Click;
             // 
-            // btnGuardar
+            // btnConvertir
             // 
-            btnGuardar.Location = new Point(391, 369);
-            btnGuardar.Name = "btnGuardar";
-            btnGuardar.Size = new Size(318, 43);
-            btnGuardar.TabIndex = 2;
-            btnGuardar.Text = "Guardar";
-            btnGuardar.UseVisualStyleBackColor = true;
-            btnGuardar.Click += btnGuardar_Click;
+            btnConvertir.Location = new Point(391, 369);
+            btnConvertir.Name = "btnConvertir";
+            btnConvertir.Size = new Size(318, 43);
+            btnConvertir.TabIndex = 2;
+            btnConvertir.Text = "Convertir";
+            btnConvertir.UseVisualStyleBackColor = true;
+            btnConvertir.Click += btnConvertir_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(btnGuardar);
+            Controls.Add(btnConvertir);
             Controls.Add(btnAbrir);
             Controls.Add(txtContenido);
             Name = "Form1";
@@ -80,6 +80,6 @@
 
         private TextBox txtContenido;
         private Button btnAbrir;
-        private Button btnGuardar;
+        private Button btnConvertir;
     }
 }
