@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using PDFtoImage;
 
 //string rutaPDF = "documento.pdf";
