@@ -1,4 +1,5 @@
 using PDFtoImage;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 //string rutaPDF = "documento.pdf";
 namespace ConvertToPNG
@@ -12,7 +13,7 @@ namespace ConvertToPNG
             InitializeComponent();
         }
 
-        private void btnAbrir_Click(object sender, EventArgs e)
+        private void showOpenFileDialog()
         {
 
             using OpenFileDialog dialogo = new OpenFileDialog();
@@ -26,8 +27,10 @@ namespace ConvertToPNG
             }
         }
 
-        private void btnConvertir_Click(object sender, EventArgs e)
+        private void convertirPDF(object sender, EventArgs e)
         {
+            showOpenFileDialog();
+            
             if (string.IsNullOrEmpty(rutaFile))
             {
                 MessageBox.Show("Primero abre un archivo PDF.");
@@ -36,7 +39,6 @@ namespace ConvertToPNG
 
             using FolderBrowserDialog carpeta = new FolderBrowserDialog();
             if (carpeta.ShowDialog() != DialogResult.OK) return;
-
             try
             {
                 byte[] pdf = File.ReadAllBytes(rutaFile);
@@ -55,6 +57,6 @@ namespace ConvertToPNG
             {
                 MessageBox.Show($"No se pudo convertir: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
+        }            
     }
 }

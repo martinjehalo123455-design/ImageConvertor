@@ -30,7 +30,7 @@
         {
             txtContenido = new TextBox();
             btnAbrir = new Button();
-            btnConvertir = new Button();
+            // btnConvertir = new Button();
             SuspendLayout();
             // 
             // txtContenido
@@ -45,22 +45,22 @@
             // btnAbrir
             // 
             btnAbrir.Location = new Point(61, 369);
-            btnAbrir.Name = "btnAbrir";
+            btnAbrir.Name = "btnConvertirPDF";
             btnAbrir.Size = new Size(324, 43);
             btnAbrir.TabIndex = 1;
-            btnAbrir.Text = "Abrir";
+            btnAbrir.Text = "PDF";
             btnAbrir.UseVisualStyleBackColor = true;
-            btnAbrir.Click += btnAbrir_Click;
+            btnAbrir.Click += convertirPDF;
             // 
             // btnConvertir
             // 
-            btnConvertir.Location = new Point(391, 369);
-            btnConvertir.Name = "btnConvertir";
-            btnConvertir.Size = new Size(318, 43);
-            btnConvertir.TabIndex = 2;
-            btnConvertir.Text = "Convertir";
-            btnConvertir.UseVisualStyleBackColor = true;
-            btnConvertir.Click += btnConvertir_Click;
+            //btnConvertir.Location = new Point(391, 369);
+            //btnConvertir.Name = "btnConvertir";
+            //btnConvertir.Size = new Size(318, 43);
+            //btnConvertir.TabIndex = 2;
+            //btnConvertir.Text = "Convertir";
+            //btnConvertir.UseVisualStyleBackColor = true;
+            //btnConvertir.Click += btnConvertir_Click;
             // 
             // Form1
             // 
