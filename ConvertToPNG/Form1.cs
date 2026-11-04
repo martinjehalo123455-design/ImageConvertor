@@ -9,8 +9,6 @@ namespace ConvertToPNG
 {
     public partial class Form1 : Form
     {
-        string filtro = "Archivos PDF (*.pdf)|*.pdf|Todos los archivos (*.*)|*.*";
-        string nameFile = "";
         public Form1()
         {
             InitializeComponent();
@@ -19,29 +17,24 @@ namespace ConvertToPNG
         // Convierte PDF a PNG
         private void convertirPDF(object sender, EventArgs e)
         {
+            string filtro = "Archivos PDF (*.pdf)|*.pdf|Todos los archivos (*.*)|*.*";
             using OpenFileDialog dialogo = new OpenFileDialog();
             dialogo.Title = "Abrir archivo";
             dialogo.Filter = filtro;
 
-            if (dialogo.ShowDialog() == DialogResult.OK)
-            {
-                txtContenido.Text = dialogo.FileName;
-                nameFile = dialogo.FileName;
-            }
-
-            if (string.IsNullOrEmpty(nameFile))
-            {
-                // MessageBox.Show("Primero abre un archivo PDF.");
-                return;
-            }
-
+            if (dialogo.ShowDialog() != DialogResult.OK) return;
+            string origen = dialogo.FileName;
+            // string destino = Path.ChangeExtension(origen, ".png");
+            txtContenido.Text = dialogo.FileName;
+            
             using FolderBrowserDialog carpeta = new FolderBrowserDialog();
             if (carpeta.ShowDialog() != DialogResult.OK) return;
+            
             try
             {
-                byte[] pdf = File.ReadAllBytes(nameFile);                       // Lee el archivo en bites
+                byte[] pdf = File.ReadAllBytes(origen);                         // Lee el archivo en bites
                 int paginas = Conversion.GetPageCount(pdf);                     // Obtiene el numero de páginas que contiene el archivo
-                string nombre = Path.GetFileNameWithoutExtension(nameFile);     // Obtiene el nombre del archivo sin su extención
+                string nombre = Path.GetFileNameWithoutExtension(origen);       // Obtiene el nombre del archivo sin su extención
 
                 for (int i = 0; i < paginas; i++)
                 {
@@ -74,10 +67,11 @@ namespace ConvertToPNG
                 using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(origen);
                 image.Save(destino);
                 MessageBox.Show($"Imagen guardada en {destino}");
+                txtContenido.Text += Environment.NewLine;
                 txtContenido.Text += destino;
             }catch(Exception ex)
             {
-                MessageBox.Show($"Imagen guardada en: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"No se pudo convertir en: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

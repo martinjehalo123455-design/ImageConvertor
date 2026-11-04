@@ -80,7 +80,7 @@
 
         private TextBox txtContenido;
         private Button btnConvertirPDF;
-        private Button btnConvertir;
+        private Button btnConvertir;    // Boton en estado StandBy por el momento, no se usa a propósito, ignoralo.
         private Button btnConvertirJPG;
     }
 }
