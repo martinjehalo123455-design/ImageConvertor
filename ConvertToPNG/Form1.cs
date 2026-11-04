@@ -4,7 +4,6 @@ using SixLabors.ImageSharp.Processing;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
-//string rutaPDF = "documento.pdf";
 namespace ConvertToPNG
 {
     public partial class Form1 : Form
@@ -24,7 +23,6 @@ namespace ConvertToPNG
 
             if (dialogo.ShowDialog() != DialogResult.OK) return;
             string origen = dialogo.FileName;
-            // string destino = Path.ChangeExtension(origen, ".png");
             txtContenido.Text = dialogo.FileName;
             
             using FolderBrowserDialog carpeta = new FolderBrowserDialog();
@@ -71,7 +69,7 @@ namespace ConvertToPNG
                 txtContenido.Text += destino;
             }catch(Exception ex)
             {
-                MessageBox.Show($"No se pudo convertir en: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"No se pudo convertir: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
