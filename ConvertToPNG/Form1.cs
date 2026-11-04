@@ -1,4 +1,7 @@
 using PDFtoImage;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 //string rutaPDF = "documento.pdf";
@@ -7,13 +10,14 @@ namespace ConvertToPNG
     public partial class Form1 : Form
     {
         string filtro = "Archivos PDF (*.pdf)|*.pdf|Todos los archivos (*.*)|*.*";
-        string rutaFile = "";
+        string nameFile = "";
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void showOpenFileDialog()
+        // Convierte PDF a PNG
+        private void convertirPDF(object sender, EventArgs e)
         {
             using OpenFileDialog dialogo = new OpenFileDialog();
             dialogo.Title = "Abrir archivo";
@@ -22,17 +26,12 @@ namespace ConvertToPNG
             if (dialogo.ShowDialog() == DialogResult.OK)
             {
                 txtContenido.Text = dialogo.FileName;
-                rutaFile = dialogo.FileName;
+                nameFile = dialogo.FileName;
             }
-        }
 
-        private void convertirPDF(object sender, EventArgs e)
-        {
-            showOpenFileDialog();
-
-            if (string.IsNullOrEmpty(rutaFile))
+            if (string.IsNullOrEmpty(nameFile))
             {
-                MessageBox.Show("Primero abre un archivo PDF.");
+                // MessageBox.Show("Primero abre un archivo PDF.");
                 return;
             }
 
@@ -40,9 +39,9 @@ namespace ConvertToPNG
             if (carpeta.ShowDialog() != DialogResult.OK) return;
             try
             {
-                byte[] pdf = File.ReadAllBytes(rutaFile);                       // Lee el archivo en bites
+                byte[] pdf = File.ReadAllBytes(nameFile);                       // Lee el archivo en bites
                 int paginas = Conversion.GetPageCount(pdf);                     // Obtiene el numero de páginas que contiene el archivo
-                string nombre = Path.GetFileNameWithoutExtension(rutaFile);     // Obtiene el nombre del archivo sin su extención
+                string nombre = Path.GetFileNameWithoutExtension(nameFile);     // Obtiene el nombre del archivo sin su extención
 
                 for (int i = 0; i < paginas; i++)
                 {
@@ -58,9 +57,28 @@ namespace ConvertToPNG
             }
         }
 
-        private void convertirJPG(object sender, EventArgs e)
+        // Convierte JPG a PNG
+        private void convertirJpgAPng(object sender, EventArgs e)
         {
+            using OpenFileDialog dialogo = new OpenFileDialog();
+            dialogo.Title = "Abrir imagen";
+            dialogo.Filter = "Imágenes JPG (*.jpg;*.jpeg)|*.jpg;*.jpeg|Todos los archivos (*.*)|*.*";
+            
+            if (dialogo.ShowDialog() != DialogResult.OK) return;
+            string origen = dialogo.FileName;
+            string destino = Path.ChangeExtension(origen, ".png");
+            txtContenido.Text = origen;
 
+            try
+            {
+                using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(origen);
+                image.Save(destino);
+                MessageBox.Show($"Imagen guardada en {destino}");
+                txtContenido.Text += destino;
+            }catch(Exception ex)
+            {
+                MessageBox.Show($"Imagen guardada en: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

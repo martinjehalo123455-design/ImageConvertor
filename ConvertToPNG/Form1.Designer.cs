@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             txtContenido = new TextBox();
-            btnAbrir = new Button();
-            button1 = new Button();
+            btnConvertirPDF = new Button();
+            btnConvertirJPG = new Button();
             SuspendLayout();
             // 
             // txtContenido
@@ -44,31 +44,31 @@
             // 
             // btnConvertirPDF
             // 
-            btnAbrir.Location = new Point(61, 165);
-            btnAbrir.Name = "btnConvertitPDF";
-            btnAbrir.Size = new Size(324, 43);
-            btnAbrir.TabIndex = 1;
-            btnAbrir.Text = "PDF";
-            btnAbrir.UseVisualStyleBackColor = true;
-            btnAbrir.Click += convertirPDF;
+            btnConvertirPDF.Location = new Point(61, 165);
+            btnConvertirPDF.Name = "btnConvertitPDF";
+            btnConvertirPDF.Size = new Size(324, 43);
+            btnConvertirPDF.TabIndex = 1;
+            btnConvertirPDF.Text = "PDF";
+            btnConvertirPDF.UseVisualStyleBackColor = true;
+            btnConvertirPDF.Click += convertirPDF;
             // 
             // btnConvertirJPG
             // 
-            button1.Location = new Point(391, 165);
-            button1.Name = "btnConvertirJPG";
-            button1.Size = new Size(324, 43);
-            button1.TabIndex = 2;
-            button1.Text = "JPG";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += convertirJPG;
+            btnConvertirJPG.Location = new Point(391, 165);
+            btnConvertirJPG.Name = "btnConvertirJPG";
+            btnConvertirJPG.Size = new Size(324, 43);
+            btnConvertirJPG.TabIndex = 2;
+            btnConvertirJPG.Text = "JPG";
+            btnConvertirJPG.UseVisualStyleBackColor = true;
+            btnConvertirJPG.Click += convertirJpgAPng;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(button1);
-            Controls.Add(btnAbrir);
+            Controls.Add(btnConvertirJPG);
+            Controls.Add(btnConvertirPDF);
             Controls.Add(txtContenido);
             Name = "Form1";
             Text = "Form1";
@@ -79,8 +79,8 @@
         #endregion
 
         private TextBox txtContenido;
-        private Button btnAbrir;
+        private Button btnConvertirPDF;
         private Button btnConvertir;
-        private Button button1;
+        private Button btnConvertirJPG;
     }
 }
