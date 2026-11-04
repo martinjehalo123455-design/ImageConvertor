@@ -15,7 +15,6 @@ namespace ConvertToPNG
 
         private void showOpenFileDialog()
         {
-
             using OpenFileDialog dialogo = new OpenFileDialog();
             dialogo.Title = "Abrir archivo";
             dialogo.Filter = filtro;
@@ -30,7 +29,7 @@ namespace ConvertToPNG
         private void convertirPDF(object sender, EventArgs e)
         {
             showOpenFileDialog();
-            
+
             if (string.IsNullOrEmpty(rutaFile))
             {
                 MessageBox.Show("Primero abre un archivo PDF.");
@@ -41,9 +40,9 @@ namespace ConvertToPNG
             if (carpeta.ShowDialog() != DialogResult.OK) return;
             try
             {
-                byte[] pdf = File.ReadAllBytes(rutaFile);
-                int paginas = Conversion.GetPageCount(pdf);
-                string nombre = Path.GetFileNameWithoutExtension(rutaFile);
+                byte[] pdf = File.ReadAllBytes(rutaFile);                       // Lee el archivo en bites
+                int paginas = Conversion.GetPageCount(pdf);                     // Obtiene el numero de páginas que contiene el archivo
+                string nombre = Path.GetFileNameWithoutExtension(rutaFile);     // Obtiene el nombre del archivo sin su extención
 
                 for (int i = 0; i < paginas; i++)
                 {
@@ -57,6 +56,11 @@ namespace ConvertToPNG
             {
                 MessageBox.Show($"No se pudo convertir: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }            
+        }
+
+        private void convertirJPG(object sender, EventArgs e)
+        {
+
+        }
     }
 }

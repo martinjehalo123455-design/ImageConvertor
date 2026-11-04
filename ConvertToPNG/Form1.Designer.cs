@@ -30,7 +30,7 @@
         {
             txtContenido = new TextBox();
             btnAbrir = new Button();
-            // btnConvertir = new Button();
+            button1 = new Button();
             SuspendLayout();
             // 
             // txtContenido
@@ -39,35 +39,35 @@
             txtContenido.Multiline = true;
             txtContenido.Name = "txtContenido";
             txtContenido.ScrollBars = ScrollBars.Vertical;
-            txtContenido.Size = new Size(648, 331);
+            txtContenido.Size = new Size(654, 128);
             txtContenido.TabIndex = 0;
             // 
-            // btnAbrir
+            // btnConvertirPDF
             // 
-            btnAbrir.Location = new Point(61, 369);
-            btnAbrir.Name = "btnConvertirPDF";
+            btnAbrir.Location = new Point(61, 165);
+            btnAbrir.Name = "btnConvertitPDF";
             btnAbrir.Size = new Size(324, 43);
             btnAbrir.TabIndex = 1;
             btnAbrir.Text = "PDF";
             btnAbrir.UseVisualStyleBackColor = true;
             btnAbrir.Click += convertirPDF;
             // 
-            // btnConvertir
+            // btnConvertirJPG
             // 
-            //btnConvertir.Location = new Point(391, 369);
-            //btnConvertir.Name = "btnConvertir";
-            //btnConvertir.Size = new Size(318, 43);
-            //btnConvertir.TabIndex = 2;
-            //btnConvertir.Text = "Convertir";
-            //btnConvertir.UseVisualStyleBackColor = true;
-            //btnConvertir.Click += btnConvertir_Click;
+            button1.Location = new Point(391, 165);
+            button1.Name = "btnConvertirJPG";
+            button1.Size = new Size(324, 43);
+            button1.TabIndex = 2;
+            button1.Text = "JPG";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += convertirJPG;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(btnConvertir);
+            Controls.Add(button1);
             Controls.Add(btnAbrir);
             Controls.Add(txtContenido);
             Name = "Form1";
@@ -81,5 +81,6 @@
         private TextBox txtContenido;
         private Button btnAbrir;
         private Button btnConvertir;
+        private Button button1;
     }
 }
