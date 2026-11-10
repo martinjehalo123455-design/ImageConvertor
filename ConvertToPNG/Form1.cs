@@ -35,16 +35,6 @@ namespace ConvertToJPG
 
                 string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina_1.jpg");
                 Conversion.SaveJpeg(destino, pdf, page: 0, options: new(Dpi: 300));
-
-
-                // int paginas = Conversion.GetPageCount(pdf);
-                //for (int i = 0; i < paginas; i++)
-                //{
-                //    string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina{i + 1}.jpg");
-                //    Conversion.SaveJpg(destino, pdf, page: i, options: new(Dpi: 100));
-                //}
-                // MessageBox.Show($"Se convirtieron {paginas} página(s) en {carpeta.SelectedPath}");
-                
                 MessageBox.Show($"Se convirtió la primera página en {carpeta.SelectedPath}");
             }
             catch (Exception ex)
