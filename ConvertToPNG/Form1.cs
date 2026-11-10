@@ -1,6 +1,5 @@
 using PDFtoImage;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
+using SkiaSharp;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
@@ -30,17 +29,21 @@ namespace ConvertToPNG
             
             try
             {
-                byte[] pdf = File.ReadAllBytes(origen);                         // Lee el archivo en bites
+                byte[] pdf = File.ReadAllBytes(origen);                         // Lee el archivo PDF en bites
                 int paginas = Conversion.GetPageCount(pdf);                     // Obtiene el numero de páginas que contiene el archivo
-                string nombre = Path.GetFileNameWithoutExtension(origen);       // Obtiene el nombre del archivo sin su extención
+                string nombre = Path.GetFileNameWithoutExtension(origen);       // Obtiene el nombre del archivo sin su extensión
 
-                for (int i = 0; i < paginas; i++)
-                {
-                    string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina{i + 1}.png");
-                    Conversion.SavePng(destino, pdf, page: i, options: new(Dpi: 300));
-                }
+                string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina_1.png");
+                Conversion.SavePng(destino, pdf, page: 1, options: new(Dpi: 300));
 
-                MessageBox.Show($"Se convirtieron {paginas} página(s) en {carpeta.SelectedPath}");
+                //for (int i = 0; i < paginas; i++)
+                //{
+                //    string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina{i + 1}.png");
+                //    Conversion.SavePng(destino, pdf, page: i, options: new(Dpi: 300));
+                //}
+
+                // MessageBox.Show($"Se convirtieron {paginas} página(s) en {carpeta.SelectedPath}");
+                MessageBox.Show($"Se convirtió la primera página en {carpeta.SelectedPath}");
             }
             catch (Exception ex)
             {
@@ -51,10 +54,28 @@ namespace ConvertToPNG
         // Convierte JPG a PNG
         private void convertirJpgAPng(object sender, EventArgs e)
         {
+            convertirImagenAPng("Imágenes JPG (*.jpg;*.jpeg)|*.jpg;*.jpeg|Todos los archivos (*.*)|*.*");
+        }
+
+        // Convierte BMP a PNG
+        private void convertirBmpAPng(object sender, EventArgs e)
+        {
+            convertirImagenAPng("Imágenes BMP (*.bmp)|*.bmp|Todos los archivos (*.*)|*.*");
+        }
+
+        // Convierte GIF a PNG (solo el primer cuadro si es animado)
+        private void convertirGifAPng(object sender, EventArgs e)
+        {
+            convertirImagenAPng("Imágenes GIF (*.gif)|*.gif|Todos los archivos (*.*)|*.*");
+        }
+
+        // Pide una imagen al usuario y la guarda como PNG en la misma carpeta
+        private void convertirImagenAPng(string filtro)
+        {
             using OpenFileDialog dialogo = new OpenFileDialog();
             dialogo.Title = "Abrir imagen";
-            dialogo.Filter = "Imágenes JPG (*.jpg;*.jpeg)|*.jpg;*.jpeg|Todos los archivos (*.*)|*.*";
-            
+            dialogo.Filter = filtro;
+
             if (dialogo.ShowDialog() != DialogResult.OK) return;
             string origen = dialogo.FileName;
             string destino = Path.ChangeExtension(origen, ".png");
@@ -62,12 +83,20 @@ namespace ConvertToPNG
 
             try
             {
-                using SixLabors.ImageSharp.Image image = SixLabors.ImageSharp.Image.Load(origen);
-                image.Save(destino);
+                using SKBitmap? imagen = SKBitmap.Decode(origen);                   // Lee la imagen (en GIF solo el primer cuadro)
+                if (imagen == null)
+                {
+                    MessageBox.Show("El archivo no es una imagen válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                using SKData png = imagen.Encode(SKEncodedImageFormat.Png, 100);   // Codifica la imagen como PNG
+                File.WriteAllBytes(destino, png.ToArray());                         // Guarda el PNG en disco
                 MessageBox.Show($"Imagen guardada en {destino}");
                 txtContenido.Text += Environment.NewLine;
                 txtContenido.Text += destino;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show($"No se pudo convertir: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

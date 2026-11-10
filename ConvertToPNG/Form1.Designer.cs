@@ -31,6 +31,8 @@
             txtContenido = new TextBox();
             btnConvertirPDF = new Button();
             btnConvertirJPG = new Button();
+            btnConvertirBMP = new Button();
+            btnConvertirGIF = new Button();
             SuspendLayout();
             // 
             // txtContenido
@@ -61,12 +63,34 @@
             btnConvertirJPG.Text = "JPG";
             btnConvertirJPG.UseVisualStyleBackColor = true;
             btnConvertirJPG.Click += convertirJpgAPng;
-            // 
+            //
+            // btnConvertirBMP
+            //
+            btnConvertirBMP.Location = new Point(61, 214);
+            btnConvertirBMP.Name = "btnConvertirBMP";
+            btnConvertirBMP.Size = new Size(324, 43);
+            btnConvertirBMP.TabIndex = 3;
+            btnConvertirBMP.Text = "BMP";
+            btnConvertirBMP.UseVisualStyleBackColor = true;
+            btnConvertirBMP.Click += convertirBmpAPng;
+            //
+            // btnConvertirGIF
+            //
+            btnConvertirGIF.Location = new Point(391, 214);
+            btnConvertirGIF.Name = "btnConvertirGIF";
+            btnConvertirGIF.Size = new Size(324, 43);
+            btnConvertirGIF.TabIndex = 4;
+            btnConvertirGIF.Text = "GIF";
+            btnConvertirGIF.UseVisualStyleBackColor = true;
+            btnConvertirGIF.Click += convertirGifAPng;
+            //
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnConvertirGIF);
+            Controls.Add(btnConvertirBMP);
             Controls.Add(btnConvertirJPG);
             Controls.Add(btnConvertirPDF);
             Controls.Add(txtContenido);
@@ -82,5 +106,7 @@
         private Button btnConvertirPDF;
         private Button btnConvertir;    // Boton en estado StandBy por el momento, no se usa a propósito, ignoralo.
         private Button btnConvertirJPG;
+        private Button btnConvertirBMP;
+        private Button btnConvertirGIF;
     }
 }
