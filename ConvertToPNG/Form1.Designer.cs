@@ -95,7 +95,7 @@
             Controls.Add(btnConvertirPDF);
             Controls.Add(txtContenido);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Convertir imaganes a JPG";
             ResumeLayout(false);
             PerformLayout();
         }
