@@ -1,4 +1,4 @@
-﻿namespace ConvertToPNG
+﻿namespace ConvertToJPG
 {
     partial class Form1
     {
@@ -30,7 +30,7 @@
         {
             txtContenido = new TextBox();
             btnConvertirPDF = new Button();
-            btnConvertirJPG = new Button();
+            btnConvertirPNG = new Button();
             btnConvertirBMP = new Button();
             btnConvertirGIF = new Button();
             SuspendLayout();
@@ -54,15 +54,15 @@
             btnConvertirPDF.UseVisualStyleBackColor = true;
             btnConvertirPDF.Click += convertirPDF;
             // 
-            // btnConvertirJPG
+            // btnConvertirPNG
             // 
-            btnConvertirJPG.Location = new Point(391, 165);
-            btnConvertirJPG.Name = "btnConvertirJPG";
-            btnConvertirJPG.Size = new Size(324, 43);
-            btnConvertirJPG.TabIndex = 2;
-            btnConvertirJPG.Text = "JPG";
-            btnConvertirJPG.UseVisualStyleBackColor = true;
-            btnConvertirJPG.Click += convertirJpgAPng;
+            btnConvertirPNG.Location = new Point(391, 165);
+            btnConvertirPNG.Name = "btnConvertirPNG";
+            btnConvertirPNG.Size = new Size(324, 43);
+            btnConvertirPNG.TabIndex = 2;
+            btnConvertirPNG.Text = "PNG";
+            btnConvertirPNG.UseVisualStyleBackColor = true;
+            btnConvertirPNG.Click += convertirPngAJpg;
             //
             // btnConvertirBMP
             //
@@ -72,7 +72,7 @@
             btnConvertirBMP.TabIndex = 3;
             btnConvertirBMP.Text = "BMP";
             btnConvertirBMP.UseVisualStyleBackColor = true;
-            btnConvertirBMP.Click += convertirBmpAPng;
+            btnConvertirBMP.Click += convertirBmpAJpg;
             //
             // btnConvertirGIF
             //
@@ -82,7 +82,7 @@
             btnConvertirGIF.TabIndex = 4;
             btnConvertirGIF.Text = "GIF";
             btnConvertirGIF.UseVisualStyleBackColor = true;
-            btnConvertirGIF.Click += convertirGifAPng;
+            btnConvertirGIF.Click += convertirGifAJpg;
             //
             // Form1
             // 
@@ -91,7 +91,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(btnConvertirGIF);
             Controls.Add(btnConvertirBMP);
-            Controls.Add(btnConvertirJPG);
+            Controls.Add(btnConvertirPNG);
             Controls.Add(btnConvertirPDF);
             Controls.Add(txtContenido);
             Name = "Form1";
@@ -104,8 +104,7 @@
 
         private TextBox txtContenido;
         private Button btnConvertirPDF;
-        private Button btnConvertir;    // Boton en estado StandBy por el momento, no se usa a propósito, ignoralo.
-        private Button btnConvertirJPG;
+        private Button btnConvertirPNG;
         private Button btnConvertirBMP;
         private Button btnConvertirGIF;
     }

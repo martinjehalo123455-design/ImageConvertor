@@ -1,4 +1,4 @@
-namespace ConvertToPNG
+namespace ConvertToJPG
 {
     internal static class Program
     {

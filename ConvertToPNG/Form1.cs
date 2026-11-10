@@ -3,7 +3,7 @@ using SkiaSharp;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
-namespace ConvertToPNG
+namespace ConvertToJPG
 {
     public partial class Form1 : Form
     {
@@ -12,7 +12,7 @@ namespace ConvertToPNG
             InitializeComponent();
         }
 
-        // Convierte PDF a PNG
+        // Convierte PDF a JPG
         private void convertirPDF(object sender, EventArgs e)
         {
             string filtro = "Archivos PDF (*.pdf)|*.pdf|Todos los archivos (*.*)|*.*";
@@ -30,19 +30,21 @@ namespace ConvertToPNG
             try
             {
                 byte[] pdf = File.ReadAllBytes(origen);                         // Lee el archivo PDF en bites
-                int paginas = Conversion.GetPageCount(pdf);                     // Obtiene el numero de páginas que contiene el archivo
+                
                 string nombre = Path.GetFileNameWithoutExtension(origen);       // Obtiene el nombre del archivo sin su extensión
 
-                string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina_1.png");
-                Conversion.SavePng(destino, pdf, page: 1, options: new(Dpi: 300));
+                string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina_1.jpg");
+                Conversion.SaveJpeg(destino, pdf, page: 0, options: new(Dpi: 300));
 
+
+                // int paginas = Conversion.GetPageCount(pdf);
                 //for (int i = 0; i < paginas; i++)
                 //{
-                //    string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina{i + 1}.png");
-                //    Conversion.SavePng(destino, pdf, page: i, options: new(Dpi: 300));
+                //    string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina{i + 1}.jpg");
+                //    Conversion.SaveJpg(destino, pdf, page: i, options: new(Dpi: 100));
                 //}
-
                 // MessageBox.Show($"Se convirtieron {paginas} página(s) en {carpeta.SelectedPath}");
+                
                 MessageBox.Show($"Se convirtió la primera página en {carpeta.SelectedPath}");
             }
             catch (Exception ex)
@@ -51,26 +53,26 @@ namespace ConvertToPNG
             }
         }
 
-        // Convierte JPG a PNG
-        private void convertirJpgAPng(object sender, EventArgs e)
+        // Convierte PNG a JPG
+        private void convertirPngAJpg(object sender, EventArgs e)
         {
-            convertirImagenAPng("Imágenes JPG (*.jpg;*.jpeg)|*.jpg;*.jpeg|Todos los archivos (*.*)|*.*");
+            convertirImagenAJpg("Imágenes PNG (*.png;)|*.png|Todos los archivos (*.*)|*.*");
         }
 
-        // Convierte BMP a PNG
-        private void convertirBmpAPng(object sender, EventArgs e)
+        // Convierte BMP a JPG
+        private void convertirBmpAJpg(object sender, EventArgs e)
         {
-            convertirImagenAPng("Imágenes BMP (*.bmp)|*.bmp|Todos los archivos (*.*)|*.*");
+            convertirImagenAJpg("Imágenes BMP (*.bmp)|*.bmp|Todos los archivos (*.*)|*.*");
         }
 
-        // Convierte GIF a PNG (solo el primer cuadro si es animado)
-        private void convertirGifAPng(object sender, EventArgs e)
+        // Convierte GIF a JPG (solo el primer cuadro si es animado)
+        private void convertirGifAJpg(object sender, EventArgs e)
         {
-            convertirImagenAPng("Imágenes GIF (*.gif)|*.gif|Todos los archivos (*.*)|*.*");
+            convertirImagenAJpg("Imágenes GIF (*.gif)|*.gif|Todos los archivos (*.*)|*.*");
         }
 
-        // Pide una imagen al usuario y la guarda como PNG en la misma carpeta
-        private void convertirImagenAPng(string filtro)
+        // Pide una imagen al usuario y la guarda como JPG en la misma carpeta
+        private void convertirImagenAJpg(string filtro)
         {
             using OpenFileDialog dialogo = new OpenFileDialog();
             dialogo.Title = "Abrir imagen";
@@ -78,7 +80,7 @@ namespace ConvertToPNG
 
             if (dialogo.ShowDialog() != DialogResult.OK) return;
             string origen = dialogo.FileName;
-            string destino = Path.ChangeExtension(origen, ".png");
+            string destino = Path.ChangeExtension(origen, ".jpg");
             txtContenido.Text = origen;
 
             try
@@ -90,8 +92,15 @@ namespace ConvertToPNG
                     return;
                 }
 
-                using SKData png = imagen.Encode(SKEncodedImageFormat.Png, 100);   // Codifica la imagen como PNG
-                File.WriteAllBytes(destino, png.ToArray());                         // Guarda el PNG en disco
+                using SKBitmap fondo = new SKBitmap(imagen.Width, imagen.Height);  // Imagen nueva del mismo tamaño
+                using (SKCanvas lienzo = new SKCanvas(fondo))
+                {
+                    lienzo.Clear(SKColors.White);                                   // Pinta el fondo de blanco (JPG no admite transparencia)
+                    lienzo.DrawBitmap(imagen, 0, 0, SKSamplingOptions.Default);     // Dibuja la imagen original encima
+                }
+
+                using SKData jpg = fondo.Encode(SKEncodedImageFormat.Jpeg, 90);    // Codifica la imagen como JPG con calidad 90 (recomendado)
+                File.WriteAllBytes(destino, jpg.ToArray());                         // Guarda el JPG en disco
                 MessageBox.Show($"Imagen guardada en {destino}");
                 txtContenido.Text += Environment.NewLine;
                 txtContenido.Text += destino;
