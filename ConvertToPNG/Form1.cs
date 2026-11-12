@@ -29,11 +29,11 @@ namespace ConvertToJPG
             
             try
             {
-                byte[] pdf = File.ReadAllBytes(origen);                         // Lee el archivo PDF en bites
-                
-                string nombre = Path.GetFileNameWithoutExtension(origen);       // Obtiene el nombre del archivo sin su extensión
+                using FileStream pdf = File.OpenRead(origen);                                   // Lee el archivo PDF como stream para soportar archivos grandes
 
-                string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina_1.jpg");
+                string nombre = Path.GetFileNameWithoutExtension(origen);                       // Obtiene el nombre del archivo sin su extensión
+                string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina_1.jpg");  // 
+                
                 Conversion.SaveJpeg(destino, pdf, page: 0, options: new(Dpi: 300));
                 MessageBox.Show($"Se convirtió la primera página en {carpeta.SelectedPath}");
             }
@@ -82,14 +82,14 @@ namespace ConvertToJPG
                     return;
                 }
 
-                using SKBitmap fondo = new SKBitmap(imagen.Width, imagen.Height);  // Imagen nueva del mismo tamaño
+                using SKBitmap fondo = new SKBitmap(imagen.Width, imagen.Height);   // Imagen nueva del mismo tamaño
                 using (SKCanvas lienzo = new SKCanvas(fondo))
                 {
-                    lienzo.Clear(SKColors.White);                                   // Pinta el fondo de blanco (JPG no admite transparencia)
+                    lienzo.Clear(SKColors.White);                                   // Pinta el fondo de blanco
                     lienzo.DrawBitmap(imagen, 0, 0, SKSamplingOptions.Default);     // Dibuja la imagen original encima
                 }
 
-                using SKData jpg = fondo.Encode(SKEncodedImageFormat.Jpeg, 90);    // Codifica la imagen como JPG con calidad 90 (recomendado)
+                using SKData jpg = fondo.Encode(SKEncodedImageFormat.Jpeg, 90);     // Codifica la imagen como JPG con calidad 90 (recomendado)
                 File.WriteAllBytes(destino, jpg.ToArray());                         // Guarda el JPG en disco
                 MessageBox.Show($"Imagen guardada en {destino}");
                 txtContenido.Text += Environment.NewLine;
