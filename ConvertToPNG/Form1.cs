@@ -1,4 +1,4 @@
-using PDFtoImage;
+Ôªøusing PDFtoImage;
 using SkiaSharp;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
@@ -31,11 +31,11 @@ namespace ConvertToJPG
             {
                 using FileStream pdf = File.OpenRead(origen);                                   // Lee el archivo PDF como stream para soportar archivos grandes
 
-                string nombre = Path.GetFileNameWithoutExtension(origen);                       // Obtiene el nombre del archivo sin su extensiÛn
+                string nombre = Path.GetFileNameWithoutExtension(origen);                       // Obtiene el nombre del archivo sin su extensi√≥n
                 string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina_1.jpg");  // 
                 
                 Conversion.SaveJpeg(destino, pdf, page: 0, options: new(Dpi: 300));
-                MessageBox.Show($"Se convirtiÛ la primera p·gina en {carpeta.SelectedPath}");
+                MessageBox.Show($"Se convirti√≥ la primera p√°gina en {carpeta.SelectedPath}");
             }
             catch (Exception ex)
             {
@@ -46,19 +46,19 @@ namespace ConvertToJPG
         // Convierte PNG a JPG
         private void convertirPngAJpg(object sender, EventArgs e)
         {
-            convertirImagenAJpg("Im·genes PNG (*.png;)|*.png|Todos los archivos (*.*)|*.*");
+            convertirImagenAJpg("Im√°genes PNG (*.png;)|*.png|Todos los archivos (*.*)|*.*");
         }
 
         // Convierte BMP a JPG
         private void convertirBmpAJpg(object sender, EventArgs e)
         {
-            convertirImagenAJpg("Im·genes BMP (*.bmp)|*.bmp|Todos los archivos (*.*)|*.*");
+            convertirImagenAJpg("Im√°genes BMP (*.bmp)|*.bmp|Todos los archivos (*.*)|*.*");
         }
 
         // Convierte GIF a JPG (solo el primer cuadro si es animado)
         private void convertirGifAJpg(object sender, EventArgs e)
         {
-            convertirImagenAJpg("Im·genes GIF (*.gif)|*.gif|Todos los archivos (*.*)|*.*");
+            convertirImagenAJpg("Im√°genes GIF (*.gif)|*.gif|Todos los archivos (*.*)|*.*");
         }
 
         // Pide una imagen al usuario y la guarda como JPG en la misma carpeta
@@ -78,11 +78,11 @@ namespace ConvertToJPG
                 using SKBitmap? imagen = SKBitmap.Decode(origen);                   // Lee la imagen (en GIF solo el primer cuadro)
                 if (imagen == null)
                 {
-                    MessageBox.Show("El archivo no es una imagen v·lida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("El archivo no es una imagen v√°lida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                using SKBitmap fondo = new SKBitmap(imagen.Width, imagen.Height);   // Imagen nueva del mismo tamaÒo
+                using SKBitmap fondo = new SKBitmap(imagen.Width, imagen.Height);   // Imagen nueva del mismo tama√±o
                 using (SKCanvas lienzo = new SKCanvas(fondo))
                 {
                     lienzo.Clear(SKColors.White);                                   // Pinta el fondo de blanco
