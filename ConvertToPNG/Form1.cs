@@ -1,5 +1,5 @@
-﻿using PDFtoImage;
-using SkiaSharp;
+﻿using PDFtoImage;   // Utiliza SkiaSharp internamente para procesar PDF pero es una librería independiente
+using SkiaSharp;    // Extención de NuGET para procesamiento de imagenes 2D
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
@@ -12,7 +12,7 @@ namespace ConvertToJPG
             InitializeComponent();
         }
 
-        // Convierte PDF a JPG
+        // (PDFtoImage) Convierte PDF a JPG
         private void convertirPDF(object sender, EventArgs e)
         {
             string filtro = "Archivos PDF (*.pdf)|*.pdf|Todos los archivos (*.*)|*.*";
@@ -21,6 +21,7 @@ namespace ConvertToJPG
             dialogo.Filter = filtro;
 
             if (dialogo.ShowDialog() != DialogResult.OK) return;
+            
             string origen = dialogo.FileName;
             txtContenido.Text = dialogo.FileName;
             
@@ -29,13 +30,53 @@ namespace ConvertToJPG
             
             try
             {
-                using FileStream pdf = File.OpenRead(origen);                                   // Lee el archivo PDF como stream para soportar archivos grandes
-
-                string nombre = Path.GetFileNameWithoutExtension(origen);                       // Obtiene el nombre del archivo sin su extensión
-                string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina_1.jpg");  // 
+                using FileStream pdf = File.OpenRead(origen);                                       // Lee el archivo PDF como stream para soportar archivos grandes.
+                string nombre = Path.GetFileNameWithoutExtension(origen);                           // Obtiene el nombre del archivo sin su extensión.
+                string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina_1.jpg");      // Se crea la ruta donde se va a guardar el JPG.
                 
-                Conversion.SaveJpeg(destino, pdf, page: 0, options: new(Dpi: 300));
-                MessageBox.Show($"Se convirtió la primera página en {carpeta.SelectedPath}");
+                Conversion.SaveJpeg(destino, pdf, page: 0, options: new(Dpi: 300));                 // Extensión PDFtoImage para convertir el PDF a JPG.
+                MessageBox.Show($"Se convirtió la primera página en {destino}");
+                // MessageBox.Show($"Se convirtió la primera página en {carpeta.SelectedPath}");       // Un MessageBox de validación.
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"No se pudo convertir: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // (skiaSharp) Pide una imagen al usuario y la guarda como JPG en la misma carpeta.
+        private void convertirImagenAJpg(string filtro)
+        {
+            using OpenFileDialog dialogo = new OpenFileDialog();
+            dialogo.Title = "Abrir imagen";
+            dialogo.Filter = filtro;
+
+            if (dialogo.ShowDialog() != DialogResult.OK) return;
+            string origen = dialogo.FileName;
+            string destino = Path.ChangeExtension(origen, ".jpg");
+            txtContenido.Text = origen;
+
+            try
+            {
+                using SKBitmap? imagen = SKBitmap.Decode(origen);                    // Lee la imagen (en GIF solo el primer cuadro).
+                if (imagen == null)
+                {
+                    MessageBox.Show("El archivo no es una imagen válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                using SKBitmap fondo = new SKBitmap(imagen.Width, imagen.Height);   // Imagen nueva del mismo tamaño.
+                using (SKCanvas lienzo = new SKCanvas(fondo))
+                {
+                    lienzo.Clear(SKColors.White);                                   // Pinta el fondo de blanco.
+                    lienzo.DrawBitmap(imagen, 0, 0, SKSamplingOptions.Default);     // Dibuja la imagen original encima.
+                }
+
+                using SKData jpg = fondo.Encode(SKEncodedImageFormat.Jpeg, 90);     // Codifica la imagen como JPG con calidad 90 (recomendado).
+                File.WriteAllBytes(destino, jpg.ToArray());                         // Guarda el JPG en disco.
+                MessageBox.Show($"Imagen guardada en {destino}");
+                txtContenido.Text += Environment.NewLine;
+                txtContenido.Text += destino;
             }
             catch (Exception ex)
             {
@@ -59,46 +100,6 @@ namespace ConvertToJPG
         private void convertirGifAJpg(object sender, EventArgs e)
         {
             convertirImagenAJpg("Imágenes GIF (*.gif)|*.gif|Todos los archivos (*.*)|*.*");
-        }
-
-        // Pide una imagen al usuario y la guarda como JPG en la misma carpeta
-        private void convertirImagenAJpg(string filtro)
-        {
-            using OpenFileDialog dialogo = new OpenFileDialog();
-            dialogo.Title = "Abrir imagen";
-            dialogo.Filter = filtro;
-
-            if (dialogo.ShowDialog() != DialogResult.OK) return;
-            string origen = dialogo.FileName;
-            string destino = Path.ChangeExtension(origen, ".jpg");
-            txtContenido.Text = origen;
-
-            try
-            {
-                using SKBitmap? imagen = SKBitmap.Decode(origen);                   // Lee la imagen (en GIF solo el primer cuadro)
-                if (imagen == null)
-                {
-                    MessageBox.Show("El archivo no es una imagen válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                using SKBitmap fondo = new SKBitmap(imagen.Width, imagen.Height);   // Imagen nueva del mismo tamaño
-                using (SKCanvas lienzo = new SKCanvas(fondo))
-                {
-                    lienzo.Clear(SKColors.White);                                   // Pinta el fondo de blanco
-                    lienzo.DrawBitmap(imagen, 0, 0, SKSamplingOptions.Default);     // Dibuja la imagen original encima
-                }
-
-                using SKData jpg = fondo.Encode(SKEncodedImageFormat.Jpeg, 90);     // Codifica la imagen como JPG con calidad 90 (recomendado)
-                File.WriteAllBytes(destino, jpg.ToArray());                         // Guarda el JPG en disco
-                MessageBox.Show($"Imagen guardada en {destino}");
-                txtContenido.Text += Environment.NewLine;
-                txtContenido.Text += destino;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"No se pudo convertir: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
     }
 }
