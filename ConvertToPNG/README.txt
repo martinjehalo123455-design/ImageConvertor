@@ -1,19 +1,19 @@
-CONVERTIR JPG, BMP, GIF, ICO, WEBP (SkiaSharp)
-# Para la conversión de JPG, BMP y GIF a PNG se utiliza el paquete NuGET "SkiaSharp" desarrollado por Sungalia en GitHub.
-# Se eligió SkiaSharp porque es una libreria que permite hacer conversiones de formatos JPG, PDF, BMP y GIF.
+CONVERTIR JPG, BMP, GIF, ICO, WEBP [SkiaSharp]
+# Para la conversión de PNG, BMP y GIF a JPG se utiliza el paquete NuGET "SkiaSharp" desarrollado por Sungalia en GitHub.
+# Se eligió SkiaSharp porque es una libreria que permite hacer conversiones de formatos PNG, JPG, BMP, GIF, WEBP, entre otros...
 # Se agrega el paquete con "dotnet add package SixLabors.ImageSharp" desde la terminal.
-# Para agregar al proyecto: "dotnet add package SkiaSharp".
+# Para instalar extensión y agregar al proyecto ejecuta el comando: "dotnet add package SkiaSharp".
 
 
 
-CONVERTIR GIF EN FORMATO APNG (ImageSharp)
+CONVERTIR GIF EN FORMATO APNG [ImageSharp] (opcional)
 # Permite un GIF a un formato animado PNG (APNG). Muchos programas solo muestran el primer cuadro de este formato y no la animación completa.
-# Se agrega el paquete con "dotnet add package SixLabors.ImageSharp" desde la terminal.
+# Para instalar extensión y agregar al proyecto ejecuta el comando: "dotnet add package SixLabors.ImageSharp".
 
 
 
 CALIDAD DE JPG
-# 90 es una opción bastante eficiente, casi no se nota la diferencia y el archivo pesa bastante menos que con 100.
+# La conversion del JPG con calidad de 90 es una opción bastante eficiente, casi no se nota la diferencia y el archivo pesa bastante menos que con 100.
 
 
 
