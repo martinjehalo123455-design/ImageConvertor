@@ -67,7 +67,7 @@ namespace ConvertToJPG
             if (dialogo.ShowDialog() != DialogResult.OK) return;
             string origen = dialogo.FileName;
             string destino = Path.ChangeExtension(origen, ".jpg");
-            txtContenido.Text = origen;
+            txtContenido.Text = "Origen: " + origen;
 
             try
             {
@@ -89,7 +89,7 @@ namespace ConvertToJPG
                 File.WriteAllBytes(destino, jpg.ToArray());                         // Guarda el JPG en disco
                 MessageBox.Show($"Imagen guardada en {destino}");
                 txtContenido.Text += Environment.NewLine;
-                txtContenido.Text += destino;
+                txtContenido.Text += "Destino: " + destino;
             }
             catch (Exception ex)
             {
