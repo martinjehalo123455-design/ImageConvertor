@@ -1,5 +1,8 @@
-﻿using PDFtoImage;   // Extension para convertir PDF a JPG
+﻿// El metodo ProcesarImagen está incompleta
+
+using PDFtoImage;   // Extension para convertir PDF a JPG
 using SkiaSharp;    // Extension para convertir archivos PNG, BMP y GIF a JPG
+using System.Buffers.Text;    
 
 namespace ConvertToJPG
 {
@@ -8,6 +11,20 @@ namespace ConvertToJPG
         public Form1()
         {
             InitializeComponent();
+        }
+
+        public void procesarImagen(Base64FormattingOptions base64, string formato)
+        {   
+            switch (formato)
+            {
+                case ".png" :
+                    string filtro = "Imágenes PNG (*.png;)|*.png|Todos los archivos (*.*)|*.*";
+                    convertirImagenAJpg(filtro); 
+                    break;
+                default : MessageBox.Show("Formato no válido"); break;
+
+
+            }
         }
 
         // (PDFtoImage) Convierte PDF a JPG
@@ -20,18 +37,20 @@ namespace ConvertToJPG
 
             if (dialogo.ShowDialog() != DialogResult.OK) return;
             string origen = dialogo.FileName;
-            txtContenido.Text = dialogo.FileName;
-            
+            txtContenido.Text = "Origen: " + origen;
+
             using FolderBrowserDialog carpeta = new FolderBrowserDialog();
             if (carpeta.ShowDialog() != DialogResult.OK) return;
-            
+
             try
             {
                 using FileStream pdf = File.OpenRead(origen);                                   // Lee el archivo PDF como stream para soportar archivos grandes
                 string nombre = Path.GetFileNameWithoutExtension(origen);                       // Obtiene el nombre del archivo sin su extensión
-                string destino = Path.Combine(carpeta.SelectedPath, $"{nombre}_pagina_1.jpg");  
+                string destino = Path.ChangeExtension(origen, ".jpg");
                 Conversion.SaveJpeg(destino, pdf, page: 0, options: new(Dpi: 300));
-                MessageBox.Show($"Se convirtió la primera página en {carpeta.SelectedPath}");
+                MessageBox.Show($"Se convirtió la primera página en {destino}");
+                txtContenido.Text += Environment.NewLine;
+                txtContenido.Text += "Destino: " + destino;
             }
             catch (Exception ex)
             {

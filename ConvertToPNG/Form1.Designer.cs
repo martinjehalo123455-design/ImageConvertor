@@ -33,6 +33,7 @@
             btnConvertirPNG = new Button();
             btnConvertirBMP = new Button();
             btnConvertirGIF = new Button();
+            btnProcesar = new Button();
             SuspendLayout();
             // 
             // txtContenido
@@ -47,7 +48,7 @@
             // btnConvertirPDF
             // 
             btnConvertirPDF.Location = new Point(61, 165);
-            btnConvertirPDF.Name = "btnConvertitPDF";
+            btnConvertirPDF.Name = "btnConvertirPDF";
             btnConvertirPDF.Size = new Size(324, 43);
             btnConvertirPDF.TabIndex = 1;
             btnConvertirPDF.Text = "PDF";
@@ -63,9 +64,9 @@
             btnConvertirPNG.Text = "PNG";
             btnConvertirPNG.UseVisualStyleBackColor = true;
             btnConvertirPNG.Click += convertirPngAJpg;
-            //
+            // 
             // btnConvertirBMP
-            //
+            // 
             btnConvertirBMP.Location = new Point(61, 214);
             btnConvertirBMP.Name = "btnConvertirBMP";
             btnConvertirBMP.Size = new Size(324, 43);
@@ -73,9 +74,9 @@
             btnConvertirBMP.Text = "BMP";
             btnConvertirBMP.UseVisualStyleBackColor = true;
             btnConvertirBMP.Click += convertirBmpAJpg;
-            //
+            // 
             // btnConvertirGIF
-            //
+            // 
             btnConvertirGIF.Location = new Point(391, 214);
             btnConvertirGIF.Name = "btnConvertirGIF";
             btnConvertirGIF.Size = new Size(324, 43);
@@ -83,12 +84,22 @@
             btnConvertirGIF.Text = "GIF";
             btnConvertirGIF.UseVisualStyleBackColor = true;
             btnConvertirGIF.Click += convertirGifAJpg;
-            //
+            // 
+            // btnProcesar
+            // 
+            btnProcesar.Location = new Point(61, 263);
+            btnProcesar.Name = "btnProcesar";
+            btnProcesar.Size = new Size(324, 45);
+            btnProcesar.TabIndex = 5;
+            btnProcesar.Text = "PROCESS";
+            btnProcesar.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnProcesar);
             Controls.Add(btnConvertirGIF);
             Controls.Add(btnConvertirBMP);
             Controls.Add(btnConvertirPNG);
@@ -107,5 +118,6 @@
         private Button btnConvertirPNG;
         private Button btnConvertirBMP;
         private Button btnConvertirGIF;
+        private Button btnProcesar;
     }
 }
