@@ -1,8 +1,5 @@
-﻿// El metodo ProcesarImagen está incompleta
-
-using PDFtoImage;   // Extension para convertir PDF a JPG
+﻿using PDFtoImage;   // Extension para convertir PDF a JPG
 using SkiaSharp;    // Extension para convertir archivos PNG, BMP y GIF a JPG
-using System.Buffers.Text;    
 
 namespace ConvertToJPG
 {
@@ -13,49 +10,41 @@ namespace ConvertToJPG
             InitializeComponent();
         }
 
-        public void procesarImagen(Base64FormattingOptions base64, string formato)
-        {   
-            switch (formato)
+        // Recibe una imagen en Base64 y su formato (.jpg, .png, .bmp, .gif o .pdf) y devuelve el JPG en Base64
+        public string procesarImagen(string bitsImagen, string formato)
+        {
+            string extension = (formato ?? "").Trim().TrimStart('.').ToLowerInvariant();                  // Acepta ".PNG", "png", etc.
+
+            if (extension == "jpg") return bitsImagen;                                                      // Ya es JPG, devuelve el mismo Base64
+
+            byte[] datos = Convert.FromBase64String(bitsImagen);                                            // Decodifica el Base64 a bytes
+
+            using SKBitmap? imagen = extension switch
             {
-                case ".png" :
-                    string filtro = "Imágenes PNG (*.png;)|*.png|Todos los archivos (*.*)|*.*";
-                    convertirImagenAJpg(filtro); 
-                    break;
-                default : MessageBox.Show("Formato no válido"); break;
+                "png" or "bmp" or "gif" => SKBitmap.Decode(datos),                                          // En GIF solo el primer cuadro
+                "pdf" => Conversion.ToImage(new MemoryStream(datos), page: 0, options: new(Dpi: 300)),      // Solo la primera página
+                _ => throw new ArgumentException("Formato no válido. Solo se aceptan: .jpg, .png, .bmp, .gif o .pdf")
+            };
 
+            if (imagen == null) throw new ArgumentException("El contenido no es una imagen válida.");
 
+            using SKBitmap fondo = new SKBitmap(imagen.Width, imagen.Height);
+            using (SKCanvas lienzo = new SKCanvas(fondo))
+            {
+                lienzo.Clear(SKColors.White);                                                               // Fondo blanco (JPG no tiene transparencia)
+                lienzo.DrawBitmap(imagen, 0, 0, SKSamplingOptions.Default);
             }
+
+            using SKData jpg = fondo.Encode(SKEncodedImageFormat.Jpeg, 90);
+            return Convert.ToBase64String(jpg.ToArray());                                                   // Devuelve el JPG en Base64
         }
 
-        // (PDFtoImage) Convierte PDF a JPG
+            
+
+        // Convierte PDF a JPG (solo la primera página)
         private void convertirPDF(object sender, EventArgs e)
         {
-            string filtro = "Archivos PDF (*.pdf)|*.pdf|Todos los archivos (*.*)|*.*";
-            using OpenFileDialog dialogo = new OpenFileDialog();
-            dialogo.Title = "Abrir archivo";
-            dialogo.Filter = filtro;
-
-            if (dialogo.ShowDialog() != DialogResult.OK) return;
-            string origen = dialogo.FileName;
-            txtContenido.Text = "Origen: " + origen;
-
-            using FolderBrowserDialog carpeta = new FolderBrowserDialog();
-            if (carpeta.ShowDialog() != DialogResult.OK) return;
-
-            try
-            {
-                using FileStream pdf = File.OpenRead(origen);                                   // Lee el archivo PDF como stream para soportar archivos grandes
-                string nombre = Path.GetFileNameWithoutExtension(origen);                       // Obtiene el nombre del archivo sin su extensión
-                string destino = Path.ChangeExtension(origen, ".jpg");
-                Conversion.SaveJpeg(destino, pdf, page: 0, options: new(Dpi: 300));
-                MessageBox.Show($"Se convirtió la primera página en {destino}");
-                txtContenido.Text += Environment.NewLine;
-                txtContenido.Text += "Destino: " + destino;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"No se pudo convertir: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            convertirImagenAJpg("Archivos PDF (*.pdf)|*.pdf|Todos los archivos (*.*)|*.*");
         }
 
         // Convierte PNG a JPG
@@ -76,11 +65,11 @@ namespace ConvertToJPG
             convertirImagenAJpg("Imágenes GIF (*.gif)|*.gif|Todos los archivos (*.*)|*.*");
         }
 
-        // Pide una imagen al usuario y la guarda como JPG en la misma carpeta
+        // Pide un archivo al usuario, lo convierte con procesarImagen y guarda el JPG en la misma carpeta
         private void convertirImagenAJpg(string filtro)
         {
             using OpenFileDialog dialogo = new OpenFileDialog();
-            dialogo.Title = "Abrir imagen";
+            dialogo.Title = "Abrir archivo";
             dialogo.Filter = filtro;
 
             if (dialogo.ShowDialog() != DialogResult.OK) return;
@@ -90,22 +79,9 @@ namespace ConvertToJPG
 
             try
             {
-                using SKBitmap? imagen = SKBitmap.Decode(origen);                   // Lee la imagen (en GIF solo el primer cuadro)
-                if (imagen == null)
-                {
-                    MessageBox.Show("El archivo no es una imagen válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                using SKBitmap fondo = new SKBitmap(imagen.Width, imagen.Height);   // Imagen nueva del mismo tamaño
-                using (SKCanvas lienzo = new SKCanvas(fondo))
-                {
-                    lienzo.Clear(SKColors.White);                                   // Pinta el fondo de blanco
-                    lienzo.DrawBitmap(imagen, 0, 0, SKSamplingOptions.Default);     // Dibuja la imagen original encima
-                }
-
-                using SKData jpg = fondo.Encode(SKEncodedImageFormat.Jpeg, 90);     // Codifica la imagen como JPG con calidad 90 (recomendado)
-                File.WriteAllBytes(destino, jpg.ToArray());                         // Guarda el JPG en disco
+                string base64 = Convert.ToBase64String(File.ReadAllBytes(origen));         // Lee el archivo y lo pasa a Base64
+                string jpg = procesarImagen(base64, Path.GetExtension(origen));             // Convierte a JPG según la extensión del archivo
+                File.WriteAllBytes(destino, Convert.FromBase64String(jpg));                 // Guarda el JPG en disco
                 MessageBox.Show($"Imagen guardada en {destino}");
                 txtContenido.Text += Environment.NewLine;
                 txtContenido.Text += "Destino: " + destino;
