@@ -33,7 +33,6 @@
             btnConvertirPNG = new Button();
             btnConvertirBMP = new Button();
             btnConvertirGIF = new Button();
-            btnProcesar = new Button();
             SuspendLayout();
             // 
             // txtContenido
@@ -84,22 +83,12 @@
             btnConvertirGIF.Text = "GIF";
             btnConvertirGIF.UseVisualStyleBackColor = true;
             btnConvertirGIF.Click += convertirGifAJpg;
-            // 
-            // btnProcesar
-            // 
-            btnProcesar.Location = new Point(61, 263);
-            btnProcesar.Name = "btnProcesar";
-            btnProcesar.Size = new Size(324, 45);
-            btnProcesar.TabIndex = 5;
-            btnProcesar.Text = "PROCESS";
-            btnProcesar.UseVisualStyleBackColor = true;
-            // 
+            //
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(btnProcesar);
             Controls.Add(btnConvertirGIF);
             Controls.Add(btnConvertirBMP);
             Controls.Add(btnConvertirPNG);
@@ -118,6 +107,5 @@
         private Button btnConvertirPNG;
         private Button btnConvertirBMP;
         private Button btnConvertirGIF;
-        private Button btnProcesar;
     }
 }

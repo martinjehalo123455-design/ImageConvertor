@@ -32,7 +32,7 @@
             convertirImagenAJpg("Imágenes GIF (*.gif)|*.gif|Todos los archivos (*.*)|*.*");
         }
 
-        // Pide un archivo al usuario, lo convierte con procesarImagen y guarda el JPG en la misma carpeta
+        // Pide un archivo al usuario, lo convierte con ProcesarBase64 y guarda el JPG en la misma carpeta
         private void convertirImagenAJpg(string filtro)
         {
             using OpenFileDialog dialogo = new OpenFileDialog();
@@ -42,6 +42,12 @@
             if (dialogo.ShowDialog() != DialogResult.OK) return;
             string origen = dialogo.FileName;
             string destino = Path.ChangeExtension(origen, ".jpg");
+
+            // Pide confirmación antes de reemplazar un JPG existente
+            if (File.Exists(destino) &&
+                MessageBox.Show($"El archivo {destino} ya existe. ¿Desea reemplazarlo?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                return;
+
             txtContenido.Text = "Origen: " + origen;
 
             try
@@ -55,7 +61,7 @@
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"No se pudo convertir: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "No se pudo convertir", MessageBoxButtons.OK, MessageBoxIcon.Error);     // El prefijo va en el título para no duplicarlo
             }
         }
     }
