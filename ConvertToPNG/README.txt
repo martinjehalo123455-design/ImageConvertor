@@ -1,37 +1,41 @@
 CONVERTIR PNG, BMP, GIF Y PDF A JPG
 # Aplicación de Windows Forms que convierte archivos PNG, BMP, GIF y PDF a JPG.
 # Cada botón (PDF, PNG, BMP, GIF) abre un diálogo para elegir el archivo y guarda el JPG en la misma carpeta, con el mismo nombre.
-# Toda la conversión la hace un solo método: procesarImagen, en Form1.cs.
+# Toda la conversión la hace un solo método: ConvertToJpg.ProcesarBase64, en ConvertToJpg.cs.
+# Form1.cs solo se encarga de la interfaz: abrir el archivo, guardar el JPG y mostrar los mensajes.
 
 
 
-ESTRUCTURA DEL CÓDIGO (Form1.cs)
+ESTRUCTURA DEL CÓDIGO
+# Form1.cs (interfaz)
 #   convertirPDF, convertirPngAJpg,
 #   convertirBmpAJpg, convertirGifAJpg				Eventos de los botones. Solo llaman a convertirImagenAJpg con el filtro de su formato.
-#   convertirImagenAJpg(filtro)						Abre el diálogo, lee el archivo, llama a procesarImagen, guarda el JPG y muestra los mensajes.
-#   procesarImagen(bitsImagen, formato)				Recibe el archivo en Base64 y su extensión, y devuelve el JPG en Base64.
+#   convertirImagenAJpg(filtro)						Abre el diálogo, lee el archivo, llama a ConvertToJpg.ProcesarBase64, guarda el JPG y muestra los mensajes.
+#
+# ConvertToJpg.cs (conversión)
+#   ProcesarBase64(bitsImagen, formato)				Método estático. Recibe el archivo en Base64 y su extensión, y devuelve el JPG en Base64.
 #
 # Flujo:
-#   Botón -> convertirImagenAJpg(filtro) -> procesarImagen(base64, extension) -> se guarda el JPG en disco
+#   Botón -> convertirImagenAJpg(filtro) -> ConvertToJpg.ProcesarBase64(base64, extension) -> se guarda el JPG en disco
 
 
 
-MÉTODO PROCESARIMAGEN
+MÉTODO PROCESARBASE64
 # Firma:
-#   public string procesarImagen(string bitsImagen, string formato)
+#   public static string ProcesarBase64(string bitsImagen, string formato)		(clase ConvertToJpg)
 #
 # Parámetros:
 #   bitsImagen										El contenido del archivo codificado en Base64.
-#   formato											La extensión del archivo: .jpg, .png, .bmp, .gif o .pdf.
+#   formato											La extensión del archivo: .jpg, .jpeg, .png, .bmp, .gif o .pdf.
 #													Acepta mayúsculas y minúsculas, con o sin punto (".PNG", "png", etc.).
 #
 # Devuelve:
 #   El JPG codificado en Base64.
-#   Si el formato es .jpg, devuelve el mismo Base64 que recibió, sin convertirlo.
+#   Si el formato es .jpg o .jpeg, devuelve el mismo Base64 que recibió, sin convertirlo.
 #
 # Pasos:
 #   1. Normaliza la extensión: quita espacios y el punto, y la pasa a minúsculas.
-#   2. Si es "jpg", devuelve bitsImagen tal cual.
+#   2. Si es "jpg" o "jpeg", devuelve bitsImagen tal cual.
 #   3. Decodifica el Base64 a bytes con Convert.FromBase64String.
 #   4. Convierte los bytes en un SKBitmap según el formato:
 #        png, bmp, gif		SKBitmap.Decode(datos)						(en GIF solo el primer cuadro)
@@ -42,12 +46,15 @@ MÉTODO PROCESARIMAGEN
 #   7. Devuelve el JPG en Base64 con Convert.ToBase64String.
 #
 # Errores:
-#   procesarImagen no muestra mensajes; lanza excepciones (ArgumentException, FormatException si el Base64 no es válido).
-#   convertirImagenAJpg las atrapa con try/catch y muestra el mensaje en un MessageBox.
+#   ProcesarBase64 no muestra mensajes; lanza excepciones:
+#     ArgumentException								Formato no válido o contenido que no es una imagen. Se lanza tal cual.
+#     InvalidOperationException						Cualquier otro error (Base64 inválido, PDF dañado o protegido, etc.).
+#													El mensaje empieza con "No se pudo convertir:" y la excepción original queda en InnerException.
+#   convertirImagenAJpg (Form1.cs) las atrapa con try/catch y muestra el mensaje en un MessageBox.
 #
 # Ejemplo de uso:
 #   string base64 = Convert.ToBase64String(File.ReadAllBytes(@"C:\fotos\logo.png"));
-#   string jpgBase64 = procesarImagen(base64, ".png");
+#   string jpgBase64 = ConvertToJpg.ProcesarBase64(base64, ".png");
 #   File.WriteAllBytes(@"C:\fotos\logo.jpg", Convert.FromBase64String(jpgBase64));
 
 
@@ -77,7 +84,7 @@ CALIDAD DE JPG
 
 
 ELEMENTOS DE SKIASHARP USADOS EN EL PROYECTO
-# Todos se usan en Form1.cs, dentro del método procesarImagen.
+# Todos se usan en ConvertToJpg.cs, dentro del método ProcesarBase64.
 #
 # Clases y tipos:
 #   SKBitmap										Clase que guarda la imagen en memoria.
@@ -127,7 +134,7 @@ CÓMO SE USA SKIASHARP EN EL PROYECTO
 # 4. Codificar como JPG:
 #      fondo.Encode(SKEncodedImageFormat.Jpeg, 90)
 #      Convert.ToBase64String(jpg.ToArray())
-#    procesarImagen devuelve el JPG en Base64. convertirImagenAJpg lo decodifica y lo guarda con File.WriteAllBytes
+#    ProcesarBase64 devuelve el JPG en Base64. convertirImagenAJpg lo decodifica y lo guarda con File.WriteAllBytes
 #    en la misma carpeta que el original, con el mismo nombre y extensión .jpg.
 #
 # Todos los objetos de SkiaSharp van dentro de "using" porque guardan memoria nativa (fuera de .NET) que se tiene que liberar al terminar.
@@ -135,7 +142,7 @@ CÓMO SE USA SKIASHARP EN EL PROYECTO
 
 
 ELEMENTOS DE PDFTOIMAGE USADOS EN EL PROYECTO
-# Se usa en Form1.cs, en una sola línea del método procesarImagen:
+# Se usa en ConvertToJpg.cs, en una sola línea del método ProcesarBase64:
 #   Conversion.ToImage(new MemoryStream(datos), page: 0, options: new(Dpi: 300))
 #
 # Clases y tipos:
@@ -163,7 +170,7 @@ ELEMENTOS DE PDFTOIMAGE USADOS EN EL PROYECTO
 DETALLES A TENER EN CUENTA
 # El JPG se guarda junto al archivo original. Si ya existe un .jpg con el mismo nombre, se reemplaza sin preguntar.
 # La extensión se toma del archivo elegido, no del botón. Con el filtro "Todos los archivos" se puede abrir cualquier formato soportado desde cualquier botón.
-# Si el formato es .jpg, el Base64 se devuelve sin validar que el contenido sea realmente un JPG.
+# Si el formato es .jpg o .jpeg, el Base64 se devuelve sin validar que el contenido sea realmente un JPG.
 # Del PDF solo se convierte la primera página. Para convertir todas habría que usar un ciclo o Conversion.ToImages(...).
 # El archivo se carga completo en memoria (byte[] y Base64), así que los archivos muy grandes usan bastante memoria.
 # La ventana se congela mientras convierte, porque la conversión se ejecuta en el hilo de la interfaz. Con archivos normales casi no se nota; con páginas muy grandes sí.
